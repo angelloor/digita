@@ -1,7 +1,12 @@
 <?php 
-  session_start();
   if(isset($_GET['logout'])){
-      session_destroy();
+    ?>
+      <script type="text/javascript">
+        localStorage.removeItem('nombre_persona');  
+        localStorage.removeItem('rol_usuario');  
+        localStorage.removeItem('id_usuario');  
+      </script>
+    <?php
   }
 ?>
 <!doctype html>

@@ -1,12 +1,8 @@
-<?php
-    require '../model/login.model.php';
-    if($_SESSION['nombre_persona'] == ""){
-    	header('Location: ../');
-    }
-    if($_SESSION['rol_usuario'] == "DIGITADOR"){
-    	header('Location: ./');
-    }
-?>
+<script type="text/javascript">
+    if (!(localStorage.getItem('nombre_persona'))) {
+      window.location.href = "../../index.php";
+    } 
+</script>
 <!doctype html>
 <html lang="es">
 <head>
@@ -55,7 +51,6 @@
                <div class="col-12 col-sm-12 col-md-8 col-xl-8 mt-2">
                    <div class="btn-group-sm">
                        <button class="btn btn-success" id="visualizar"  onclick="visualizar();"><span class="fas fa-file-alt"></span>&nbsp&nbspVisualizar</button>
-                       <button class="btn btn-success" id="mostrarTodo"  onclick="consultarTodo();"><span class="fas fa-file-alt"></span>&nbsp&nbspMostrar Todo</button>
                        <button class="btn btn-success" id="pdf" onclick="pdf();"><span class="fa fa-file-pdf"></span>&nbsp&nbspPdf</button>
                        <button class="btn btn-success" id="excel" onclick="excel();"><span class="fa fa-file-excel"></span>&nbsp&nbspExcel</button>
                    </div>

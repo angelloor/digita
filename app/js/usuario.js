@@ -1,11 +1,11 @@
 var url = "../controller/usuario.controller.php";
 
-$(document).ready(function () {
+$(document).ready(() => {
     BloquearBotones(true);
     Consultar();
 })
 
-function borrarUsuarios() {
+borrarUsuarios = () => {
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             cancelButton: 'btn btn-primary mr-2 ml-2',
@@ -27,15 +27,15 @@ function borrarUsuarios() {
                 data: { "accion": "BORRARUSUARIOS" },
                 type: 'POST',
                 dataType: 'json'
-            }).done(function (response) {
+            }).done((response) => {
                 if (response == "OK") {
                     MostrarAlerta("Éxito!", "Usuarios Eliminados", "success");
                     Consultar();
                 } else {
                     MostrarAlerta("Error!", response, "error");
                 }
-            }).fail(function (response) {
-                console.log(response);
+            }).fail((err) => {
+                console.log(err);
             });
         } else if (
             result.dismiss === Swal.DismissReason.cancel
@@ -45,15 +45,15 @@ function borrarUsuarios() {
     })
 }
 
-function Consultar() {
+Consultar = () => {
     $.ajax({
         data: { "accion": "CONSULTAR" },
         url: url,
         type: 'POST',
         dataType: 'json'
-    }).done(function (response) {
+    }).done((response) => {
         var html = "";
-        $.each(response, function (index, data) {
+        $.each(response, (index, data) => {
             html += "<tr>";
             html += "<td>" + data.ID_USUARIO + "</td>";
             html += "<td>" + data.NOMBRE_PERSONA + "</td>";
@@ -67,20 +67,20 @@ function Consultar() {
             html += "</tr>";
         });
         document.getElementById("datos").innerHTML = html;
-    }).fail(function (response) {
-        console.log(response);
+    }).fail((err) => {
+        console.log(err);
     });
 }
 
-function EscucharConsulta(value) {
+EscucharConsulta = (value) => {
     $.ajax({
         data: { "accion": "CONSULTAR_ID_ROW", "ValorBuscar": value },
         url: url,
         type: 'POST',
         dataType: 'json'
-    }).done(function (response) {
+    }).done((response) => {
         var html = "";
-        $.each(response, function (index, data) {
+        $.each(response, (index, data) => {
             html += "<tr>";
             html += "<td>" + data.ID_USUARIO + "</td>";
             html += "<td>" + data.NOMBRE_PERSONA + "</td>";
@@ -94,19 +94,19 @@ function EscucharConsulta(value) {
             html += "</tr>";
         });
         document.getElementById("datos").innerHTML = html;
-    }).fail(function (response) {
-        console.log(response);
+    }).fail((err) => {
+        console.log(err);
     });
 }
 
-function retornarDatosConsulta(accion) {
+retornarDatosConsulta = (accion) => {
     return {
         "accion": accion,
         "idUsuario": document.getElementById('idUsuario').value
     }
 }
 
-function ConsultarPorId(idUsuario) {
+ConsultarPorId = (idUsuario) => {
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             cancelButton: 'btn btn-primary mr-2 ml-2',
@@ -128,7 +128,7 @@ function ConsultarPorId(idUsuario) {
                 data: { "idUsuario": idUsuario, "accion": "CONSULTAR_ID" },
                 type: 'POST',
                 dataType: 'json'
-            }).done(function (response) {
+            }).done((response) => {
                 document.getElementById('NombrePersona').value = response.NOMBRE_PERSONA;
                 document.getElementById('nombreUsuario').value = response.NOMBRE_USUARIO;
                 document.getElementById('clave').value = response.CLAVE;
@@ -138,8 +138,8 @@ function ConsultarPorId(idUsuario) {
                     document.getElementById('rolUsuario').disabled = true;
                 }
                 BloquearBotones(false);
-            }).fail(function (response) {
-                console.log(response);
+            }).fail((err) => {
+                console.log(err);
             });
         } else if (
             result.dismiss === Swal.DismissReason.cancel
@@ -150,13 +150,13 @@ function ConsultarPorId(idUsuario) {
     document.getElementById('rolUsuario').disabled = false;
 }
 
-function Guardar() {
+Guardar = () => {
     $.ajax({
         url: url,
         data: retornarDatos("GUARDAR"),
         type: 'POST',
         dataType: 'json'
-    }).done(function (response) {
+    }).done((response) => {
         if (response == "OK") {
             MostrarAlerta("Éxito!", "Datos guardados con éxito", "success");
             Limpiar();
@@ -164,18 +164,18 @@ function Guardar() {
             MostrarAlerta("Error!", response, "error");
         }
         Consultar();
-    }).fail(function (response) {
-        console.log(response);
+    }).fail((err) => {
+        console.log(err);
     });
 }
 
-function Modificar() {
+Modificar = () => {
     $.ajax({
         url: url,
         data: retornarDatos("MODIFICAR"),
         type: 'POST',
         dataType: 'json'
-    }).done(function (response) {
+    }).done((response) => {
         if (response == "OK") {
             MostrarAlerta("Éxito!", "Datos actualizados con éxito", "success");
             Limpiar();
@@ -183,13 +183,13 @@ function Modificar() {
             MostrarAlerta("Error!", response, "error");
         }
         Consultar();
-    }).fail(function (response) {
-        console.log(response);
+    }).fail((err) => {
+        console.log(err);
     });
     document.getElementById('rolUsuario').disabled = false;
 }
 
-function Eliminar(idUsuario) {
+Eliminar = (idUsuario) => {
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             cancelButton: 'btn btn-primary mr-2 ml-2',
@@ -211,15 +211,15 @@ function Eliminar(idUsuario) {
                 data: { "idUsuario": idUsuario, "accion": "ELIMINAR" },
                 type: 'POST',
                 dataType: 'json'
-            }).done(function (response) {
+            }).done((response) => {
                 if (response == "OK") {
                     swalWithBootstrapButtons.fire('', 'Registro eliminado', 'success')
                 } else {
                     swalWithBootstrapButtons.fire('', response, 'error')
                 }
                 Consultar();
-            }).fail(function (response) {
-                console.log(response);
+            }).fail((err) => {
+                console.log(err);
             });
         } else if (
             result.dismiss === Swal.DismissReason.cancel
@@ -229,7 +229,7 @@ function Eliminar(idUsuario) {
     })
 }
 
-function Validar() {
+Validar = () => {
     NombrePersona = document.getElementById('NombrePersona').value;
     nombreUsuario = document.getElementById('nombreUsuario ').value;
     clave = document.getElementById('clave').value;
@@ -240,7 +240,7 @@ function Validar() {
     return true;
 }
 
-function retornarDatos(accion) {
+retornarDatos = (accion) => {
     return {
         "NombrePersona": (document.getElementById('NombrePersona').value).toUpperCase(),
         "nombreUsuario": document.getElementById('nombreUsuario').value,
@@ -251,7 +251,7 @@ function retornarDatos(accion) {
     };
 }
 
-function Limpiar() {
+Limpiar = () => {
     document.getElementById('NombrePersona').value = "";
     document.getElementById('nombreUsuario').value = "";
     document.getElementById('clave').value = "";
@@ -259,13 +259,13 @@ function Limpiar() {
     BloquearBotones(true);
 }
 
-function Cancelar() {
+Cancelar = () => {
     BloquearBotones(false);
     Limpiar();
     document.getElementById('rolUsuario').disabled = false;
 }
 
-function BloquearBotones(guardar) {
+BloquearBotones = (guardar) => {
     if (guardar) {
         document.getElementById('guardar').disabled = false;
         document.getElementById('modificar').disabled = true;
@@ -277,7 +277,7 @@ function BloquearBotones(guardar) {
     }
 }
 
-function MostrarAlerta(titulo, descripcion, tipoAlerta) {
+MostrarAlerta = (titulo, descripcion, tipoAlerta) => {
     Swal.fire(
         titulo,
         descripcion,
@@ -285,7 +285,7 @@ function MostrarAlerta(titulo, descripcion, tipoAlerta) {
     );
 }
 
-function mostrarTodo() {
+mostrarTodo = () => {
     document.getElementsByName('idUsuario')[0].value = '';
     Consultar();
 }

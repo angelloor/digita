@@ -12,16 +12,16 @@ var estadoNuevaActa = 0;
 var estadoFinalizar = 0;
 var estadoActaGuardada = 0;
 
-$(document).ready(function () {
+$(document).ready(() => {
     BloquearBotonesAll(true);
     obtenerParametros();
     verificarActas();
 })
 
 // Limitar el tamaño del numero ingresado y permitir solo numeros
-function manejoInput(inputF, inputS) {
+manejoInput = (inputF, inputS) => {
     $('input')
-        .keypress(function (event) {
+        .keypress((event) => {
             if (event.which < 48 || event.which > 57 || this.value.length == 3 || event.which == 9) {
                 return false;
             }
@@ -55,32 +55,32 @@ function manejoInput(inputF, inputS) {
     });
 }
 
-function focusFinal() {
+focusFinal = () => {
     window.location.href = "#buttonFinal";
 }
 
-function verificarActas() {
+verificarActas = () => {
     $.ajax({
         url: url,
         data: { "accion": "VERIFICARACTAS" },
         type: 'POST',
         dataType: 'json'
-    }).done(function (response) {
+    }).done((response) => {
         if (response.estado_generacion == 0) {
             document.getElementById('iniciar').disabled = true;
         }
-    }).fail(function (response) {
-        console.log(response);
+    }).fail((err) => {
+        console.log(err);
     });
 }
 
-function finalizar() {
+finalizar = () => {
     $.ajax({
         url: url,
         data: { "accion": "FINALIZAR", "idSesion": idSesion },
         type: 'POST',
         dataType: 'json'
-    }).done(function (response) {
+    }).done((response) => {
         if (response == "OK") {
             estadoFinalizar = 0;
             estadoSesion = 0;
@@ -93,28 +93,28 @@ function finalizar() {
         } else {
             MostrarAlerta("Error!", response, "error");
         }
-    }).fail(function (response) {
-        console.log(response);
+    }).fail((err) => {
+        console.log(err);
     });
 }
 
-function obtenerParametros() {
+obtenerParametros = () => {
     $.ajax({
         url: url,
         data: { "accion": "PARAMETROS" },
         type: 'POST',
         dataType: 'json'
-    }).done(function (response) {
-        totalActas = response.TOTAL_ACTAS;
-        numeroCandidatos = (response.NUMERO_CANDIDATOS);
+    }).done((response) => {
+        totalActas = response.total_actas;
+        numeroCandidatos = (response.numero_candidatos);
         document.getElementById('indicadorActa').innerText = "1" + " / " + totalActas;
-    }).fail(function (response) {
-        console.log(response);
+    }).fail((err) => {
+        console.log(err);
     });
 
 }
 
-function Nuevo() {
+Nuevo = () => {
     if (estadoSesion == 0) {
         MostrarAlerta("", "Primero tienes que iniciar sesión", "info");
         return;
@@ -140,18 +140,18 @@ function Nuevo() {
                     data: { "accion": "NUEVO" },
                     type: 'POST',
                     dataType: 'json'
-                }).done(function (response) {
+                }).done((response) => {
                     inputVacios = 0;
                     errores = 0;
                     estadoNuevaActa = 1;
                     estadoActaGuardada = 0;
-                    numActa = response[0].ACTA_ID;
+                    numActa = response[0].acta_id;
                     BloquearBotones(false);
                     var html = "";
-                    $.each(response, function (index, data) {
+                    $.each(response, (index, data) => {
                         html += "<div class='element-acta'>";
                         html += "<div class='voto'>";
-                        html += "<img src='../assets/cortes/" + data.IMG_VOTO_ID + ".jpg' alt='" + data.IMG_VOTO_ID + "' id='img" + index + "'>";
+                        html += "<img src='../assets/cortes/" + data.img_voto_id + ".jpg' alt='" + data.img_voto_id + "' id='img" + index + "'>";
                         html += "</div>";
                         html += "<div class='valor'>";
                         html += "<input type='text' onkeypress='manejoInput(" + index + "," + (parseInt(index) + 1) + ")' id='input" + index + "'>";
@@ -161,29 +161,29 @@ function Nuevo() {
                     document.getElementById("content-acta").innerHTML = html;
                     input0 = document.getElementById('input0');
                     input0.focus();
-                }).fail(function (response) {
-                    console.log(response);
+                }).fail((err) => {
+                    console.log(err);
                 });
             }
         }
     }
 }
 
-function bloquearTodosInput() {
+bloquearTodosInput = () => {
     for (let i = 0; i < parseInt(numeroCandidatos) + 2; i++) {
         var input = document.getElementById("input" + i);
         input.disabled = true;
     }
 }
 
-function limpiarTodosInput() {
+limpiarTodosInput = () => {
     for (let i = 0; i < parseInt(numeroCandidatos) + 2; i++) {
         var input = document.getElementById("input" + i);
         input.value = "";
     }
 }
 
-function comprobarInput() {
+comprobarInput = () => {
     inputVacios = 0;
     for (let i = 0; i < parseInt(numeroCandidatos) + 2; i++) {
         var input = document.getElementById("input" + i);
@@ -194,7 +194,7 @@ function comprobarInput() {
     return inputVacios;
 }
 
-function Guardar() {
+Guardar = () => {
     if (estadoSesion == 0) {
         MostrarAlerta("", "Primero tienes que iniciar sesión", "info");
         return;
@@ -250,7 +250,7 @@ function Guardar() {
                         data: { "accion": "GUARDAR", "idUsuario": idUsuario, "idSesion": idSesion, "numActa": numActa, "errores": errores },
                         type: 'POST',
                         dataType: 'json'
-                    }).done(function (response) {
+                    }).done((response) => {
                         if (response == "OK") {
                             MostrarAlerta("", "Acta Guardada", "info");
                             estadoActaGuardada = 1;
@@ -258,8 +258,8 @@ function Guardar() {
                         } else {
                             MostrarAlerta("Error!", response, "error");
                         }
-                    }).fail(function (response) {
-                        console.log(response);
+                    }).fail((err) => {
+                        console.log(err);
                     });
                     if (numeroActas == totalActas) {
                         document.getElementById('Nuevo').disabled = true;
@@ -316,7 +316,7 @@ function Guardar() {
                 data: { "accion": "GUARDAR", "idUsuario": idUsuario, "idSesion": idSesion, "numActa": numActa, "errores": errores },
                 type: 'POST',
                 dataType: 'json'
-            }).done(function (response) {
+            }).done((response) => {
                 if (response == "OK") {
                     MostrarAlerta("", "Acta Guardada", "info");
                     estadoActaGuardada = 1;
@@ -324,8 +324,8 @@ function Guardar() {
                 } else {
                     MostrarAlerta("Error!", response, "error");
                 }
-            }).fail(function (response) {
-                console.log(response);
+            }).fail((err) => {
+                console.log(err);
             });
             if (numeroActas == totalActas) {
                 document.getElementById('Nuevo').disabled = true;
@@ -340,7 +340,7 @@ function Guardar() {
     }
 }
 
-function Liberar() {
+Liberar = () => {
     if (estadoSesion == 0) {
         MostrarAlerta("", "Primero tienes que iniciar sesión", "info");
         return;
@@ -350,7 +350,7 @@ function Liberar() {
 }
 
 //combinacion de teclas
-$(document).keydown(function (e) {
+$(document).keydown((e) => {
     e = e || event;
     if (e.altKey && String.fromCharCode(e.keyCode) == 'Q') {
         Nuevo();
@@ -363,7 +363,7 @@ $(document).keydown(function (e) {
     }
 })
 
-function iniciar() {
+iniciar = () => {
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             cancelButton: 'btn btn-primary mr-2 ml-2',
@@ -386,7 +386,7 @@ function iniciar() {
                 data: { "accion": "INICIAR", "idUsuario": idUsuario, "totalActas": totalActas },
                 type: 'POST',
                 dataType: 'json'
-            }).done(function (response) {
+            }).done((response) => {
                 if (response != "") {
                     idSesion = response;
                     estadoSesion = 1;
@@ -396,8 +396,8 @@ function iniciar() {
                 } else {
                     MostrarAlerta("Error!", response, "error");
                 }
-            }).fail(function (response) {
-                console.log(response);
+            }).fail((err) => {
+                console.log(err);
             });
         } else if (
             result.dismiss === Swal.DismissReason.cancel
@@ -407,7 +407,7 @@ function iniciar() {
     })
 }
 
-function BloquearBotones(guardar) {
+BloquearBotones = (guardar) => {
     if (guardar) {
         document.getElementById('Nuevo').disabled = false;
         document.getElementById('Guardar').disabled = true;
@@ -417,7 +417,7 @@ function BloquearBotones(guardar) {
     }
 }
 
-function BloquearBotonesAll(guardar) {
+BloquearBotonesAll = (guardar) => {
     if (guardar) {
         document.getElementById('Nuevo').disabled = true;
         document.getElementById('Guardar').disabled = true;
@@ -430,7 +430,7 @@ function BloquearBotonesAll(guardar) {
     }
 }
 
-function MostrarAlerta(titulo, descripcion, tipoAlerta) {
+MostrarAlerta = (titulo, descripcion, tipoAlerta) => {
     Swal.fire(
         titulo,
         descripcion,
@@ -438,7 +438,7 @@ function MostrarAlerta(titulo, descripcion, tipoAlerta) {
     );
 }
 
-function timeAlert() {
+timeAlert = () => {
     let timerInterval
     Swal.fire({
         title: 'Sesion Iniciada',

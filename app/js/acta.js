@@ -1,25 +1,25 @@
 var url = "../controller/acta.controller.php";
 
-$(document).ready(function () {
+$(document).ready(() => {
     comprobacionGeneracion();
 })
 
-function comprobacionGeneracion() {
+comprobacionGeneracion = () => {
     $.ajax({
         url: url,
         data: { "accion": "COMPROBACION" },
         type: 'POST',
         dataType: 'json'
-    }).done(function (response) {
+    }).done((response) => {
         if (response == "OK") {
             document.getElementById('generarActas').disabled = true;
         }
-    }).fail(function (response) {
-        console.log(response);
+    }).fail((err) => {
+        console.log(err);
     });
 }
 
-function generarActas() {
+generarActas = () => {
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             cancelButton: 'btn btn-primary mr-2 ml-2',
@@ -41,15 +41,15 @@ function generarActas() {
                 data: { "accion": "GENERARACTAS" },
                 type: 'POST',
                 dataType: 'json'
-            }).done(function (response) {
+            }).done((response) => {
                 if (response == "OK") {
                     MostrarAlerta("Éxito!", "Actas Generas Correctamente", "success");
                     comprobacionGeneracion();
                 } else {
                     MostrarAlerta("Error!", response, "error");
                 }
-            }).fail(function (response) {
-                console.log(response);
+            }).fail((err) => {
+                console.log(err);
             });
         } else if (
             result.dismiss === Swal.DismissReason.cancel
@@ -59,7 +59,7 @@ function generarActas() {
     })
 }
 
-function MostrarAlerta(titulo, descripcion, tipoAlerta) {
+MostrarAlerta = (titulo, descripcion, tipoAlerta) => {
     Swal.fire(
         titulo,
         descripcion,

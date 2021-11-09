@@ -1,7 +1,5 @@
 <?php
-
     require 'conexion.php';
-
     class Usuario{
 
         public function ConsultarTodo(){
@@ -13,8 +11,8 @@
 
         public function ConsultarPorId($idUsuario){
             $conexion = new Conexion();
-            $stmt = $conexion->prepare("select * from usuario where id_usuario = :idUsuario");
-            $stmt->bindValue(":idUsuario", $idUsuario, PDO::PARAM_INT);
+            $stmt = $conexion->prepare("select * from usuario where id_usuario = :idusuario");
+            $stmt->bindValue(":idusuario", $idUsuario, PDO::PARAM_INT);
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_OBJ);
         }
@@ -30,8 +28,8 @@
         public function Guardar($NombrePersona, $nombreUsuario, $clave, $rolUsuario){
             $conexion = new Conexion();
             
-            $stmt = $conexion->prepare("select count(*) from usuario where nombre_usuario = :nombreUsuario;");
-            $stmt->bindValue(":nombreUsuario", $nombreUsuario, PDO::PARAM_STR);
+            $stmt = $conexion->prepare("select count(*) from usuario where nombre_usuario = :nombreusuario;");
+            $stmt->bindValue(":nombreusuario", $nombreUsuario, PDO::PARAM_STR);
             $stmt->execute();
             $results = $stmt->fetch(PDO::FETCH_ASSOC);
             $existeUsuario = $results['count(*)'];
@@ -48,14 +46,14 @@
                             `nombre_usuario`,
                             `clave`,
                             `rol_usuario`)
-                VALUES (:NombrePersona,
-                        :nombreUsuario,
+                values (:nombrepersona,
+                        :nombreusuario,
                         :clave,
-                        :rolUsuario);");
-                $stmt->bindValue(":NombrePersona", $NombrePersona, PDO::PARAM_STR);
-                $stmt->bindValue(":nombreUsuario", $nombreUsuario, PDO::PARAM_STR);
+                        :rolusuario);");
+                $stmt->bindValue(":nombrepersona", $NombrePersona, PDO::PARAM_STR);
+                $stmt->bindValue(":nombreusuario", $nombreUsuario, PDO::PARAM_STR);
                 $stmt->bindValue(":clave", $clave, PDO::PARAM_STR);
-                $stmt->bindValue(":rolUsuario", $rolUsuario, PDO::PARAM_STR);
+                $stmt->bindValue(":rolusuario", $rolUsuario, PDO::PARAM_STR);
                 if($stmt->execute()){
                 return "OK";
                 }else{
@@ -67,31 +65,31 @@
         public function Modificar($idUsuario, $NombrePersona, $nombreUsuario, $clave, $rolUsuario){
             $conexion = new Conexion();
 
-            $stmt = $conexion->prepare("select count(*) from usuario where nombre_usuario = :nombreUsuario;");
-            $stmt->bindValue(":nombreUsuario", $nombreUsuario, PDO::PARAM_STR);
+            $stmt = $conexion->prepare("select count(*) from usuario where nombre_usuario = :nombreusuario;");
+            $stmt->bindValue(":nombreusuario", $nombreUsuario, PDO::PARAM_STR);
             $stmt->execute();
             $results = $stmt->fetch(PDO::FETCH_ASSOC);
             $existeUsuario = $results['count(*)'];
 
-            $stmt = $conexion->prepare("select nombre_usuario from usuario where id_usuario = :idUsuario;");
-            $stmt->bindValue(":idUsuario", $idUsuario, PDO::PARAM_INT);
+            $stmt = $conexion->prepare("select nombre_usuario from usuario where id_usuario = :idusuario;");
+            $stmt->bindValue(":idusuario", $idUsuario, PDO::PARAM_INT);
             $stmt->execute();
             $results = $stmt->fetch(PDO::FETCH_ASSOC);
             $nombreUsuarioBD = $results['nombre_usuario'];
 
             if ($nombreUsuario == $nombreUsuarioBD) {
                 if($idUsuario == 1){
-                    $stmt = $conexion->prepare("UPDATE `usuario`
-                                SET `NOMBRE_PERSONA` = :NombrePersona,
-                                `NOMBRE_USUARIO` = :nombreUsuario,
-                                `CLAVE` = :clave,
-                                `ROL_USUARIO` = :rolUsuario
-                                WHERE `ID_USUARIO` = :idUsuario;");
-                    $stmt->bindValue(":NombrePersona", $NombrePersona, PDO::PARAM_STR);
-                    $stmt->bindValue(":nombreUsuario", $nombreUsuario, PDO::PARAM_STR);
+                    $stmt = $conexion->prepare("update `usuario`
+                                set `nombre_persona` = :nombrepersona,
+                                `nombre_usuario` = :nombreusuario,
+                                `clave` = :clave,
+                                `rol_usuario` = :rolusuario
+                                where `id_usuario` = :idusuario;");
+                    $stmt->bindValue(":nombrepersona", $NombrePersona, PDO::PARAM_STR);
+                    $stmt->bindValue(":nombreusuario", $nombreUsuario, PDO::PARAM_STR);
                     $stmt->bindValue(":clave", $clave, PDO::PARAM_STR);
-                    $stmt->bindValue(":rolUsuario", $rolUsuario, PDO::PARAM_STR);
-                    $stmt->bindValue(":idUsuario", $idUsuario, PDO::PARAM_INT);
+                    $stmt->bindValue(":rolusuario", $rolUsuario, PDO::PARAM_STR);
+                    $stmt->bindValue(":idusuario", $idUsuario, PDO::PARAM_INT);
                     if($stmt->execute()){
                     return "OK";
                     }else{
@@ -101,17 +99,17 @@
                     if($rolUsuario == "ADMINISTRADOR") {
                         return "Solo pueda haber un Administrador";
                     }else{
-                        $stmt = $conexion->prepare("UPDATE `usuario`
-                                        SET `NOMBRE_PERSONA` = :NombrePersona,
-                                        `NOMBRE_USUARIO` = :nombreUsuario,
-                                        `CLAVE` = :clave,
-                                        `ROL_USUARIO` = :rolUsuario
-                                        WHERE `ID_USUARIO` = :idUsuario;");
-                        $stmt->bindValue(":NombrePersona", $NombrePersona, PDO::PARAM_STR);
-                        $stmt->bindValue(":nombreUsuario", $nombreUsuario, PDO::PARAM_STR);
+                        $stmt = $conexion->prepare("update `usuario`
+                                        set `nombre_persona` = :nombrepersona,
+                                        `nombre_usuario` = :nombreusuario,
+                                        `clave` = :clave,
+                                        `rol_usuario` = :rolusuario
+                                        where `id_usuario` = :idusuario;");
+                        $stmt->bindValue(":nombrepersona", $NombrePersona, PDO::PARAM_STR);
+                        $stmt->bindValue(":nombreusuario", $nombreUsuario, PDO::PARAM_STR);
                         $stmt->bindValue(":clave", $clave, PDO::PARAM_STR);
-                        $stmt->bindValue(":rolUsuario", $rolUsuario, PDO::PARAM_STR);
-                        $stmt->bindValue(":idUsuario", $idUsuario, PDO::PARAM_INT);
+                        $stmt->bindValue(":rolusuario", $rolUsuario, PDO::PARAM_STR);
+                        $stmt->bindValue(":idusuario", $idUsuario, PDO::PARAM_INT);
                         if($stmt->execute()){
                         return "OK";
                         }else{
@@ -124,17 +122,17 @@
                     return "el nombre de usuario ya existe";
                 }else{
                     if($idUsuario == 1){
-                        $stmt = $conexion->prepare("UPDATE `usuario`
-                                    SET `NOMBRE_PERSONA` = :NombrePersona,
-                                    `NOMBRE_USUARIO` = :nombreUsuario,
-                                    `CLAVE` = :clave,
-                                    `ROL_USUARIO` = :rolUsuario
-                                    WHERE `ID_USUARIO` = :idUsuario;");
-                        $stmt->bindValue(":NombrePersona", $NombrePersona, PDO::PARAM_STR);
-                        $stmt->bindValue(":nombreUsuario", $nombreUsuario, PDO::PARAM_STR);
+                        $stmt = $conexion->prepare("update `usuario`
+                                    set `nombre_persona` = :nombrepersona,
+                                    `nombre_usuario` = :nombreusuario,
+                                    `clave` = :clave,
+                                    `rol_usuario` = :rolusuario
+                                    where `id_usuario` = :idusuario;");
+                        $stmt->bindValue(":nombrepersona", $NombrePersona, PDO::PARAM_STR);
+                        $stmt->bindValue(":nombreusuario", $nombreUsuario, PDO::PARAM_STR);
                         $stmt->bindValue(":clave", $clave, PDO::PARAM_STR);
-                        $stmt->bindValue(":rolUsuario", $rolUsuario, PDO::PARAM_STR);
-                        $stmt->bindValue(":idUsuario", $idUsuario, PDO::PARAM_INT);
+                        $stmt->bindValue(":rolusuario", $rolUsuario, PDO::PARAM_STR);
+                        $stmt->bindValue(":idusuario", $idUsuario, PDO::PARAM_INT);
                         if($stmt->execute()){
                         return "OK";
                         }else{
@@ -144,17 +142,17 @@
                         if($rolUsuario == "ADMINISTRADOR") {
                             return "Solo pueda haber un Administrador";
                         }else{
-                            $stmt = $conexion->prepare("UPDATE `usuario`
-                                            SET `NOMBRE_PERSONA` = :NombrePersona,
-                                            `NOMBRE_USUARIO` = :nombreUsuario,
-                                            `CLAVE` = :clave,
-                                            `ROL_USUARIO` = :rolUsuario
-                                            WHERE `ID_USUARIO` = :idUsuario;");
-                            $stmt->bindValue(":NombrePersona", $NombrePersona, PDO::PARAM_STR);
-                            $stmt->bindValue(":nombreUsuario", $nombreUsuario, PDO::PARAM_STR);
+                            $stmt = $conexion->prepare("update `usuario`
+                                            set `nombre_persona` = :nombrepersona,
+                                            `nombre_usuario` = :nombreusuario,
+                                            `clave` = :clave,
+                                            `rol_usuario` = :rolusuario
+                                            where `id_usuario` = :idusuario;");
+                            $stmt->bindValue(":nombrepersona", $NombrePersona, PDO::PARAM_STR);
+                            $stmt->bindValue(":nombreusuario", $nombreUsuario, PDO::PARAM_STR);
                             $stmt->bindValue(":clave", $clave, PDO::PARAM_STR);
-                            $stmt->bindValue(":rolUsuario", $rolUsuario, PDO::PARAM_STR);
-                            $stmt->bindValue(":idUsuario", $idUsuario, PDO::PARAM_INT);
+                            $stmt->bindValue(":rolusuario", $rolUsuario, PDO::PARAM_STR);
+                            $stmt->bindValue(":idusuario", $idUsuario, PDO::PARAM_INT);
                             if($stmt->execute()){
                             return "OK";
                             }else{
@@ -173,8 +171,8 @@
             $stmt->execute();
             $results = $stmt->fetch(PDO::FETCH_ASSOC);
             $totalUsuarios = $results['count(*)'];
-            $stmt = $conexion->prepare("select rol_usuario from usuario where id_usuario = :idUsuario");
-            $stmt->bindValue(":idUsuario", $idUsuario, PDO::PARAM_INT);
+            $stmt = $conexion->prepare("select rol_usuario from usuario where id_usuario = :idusuario");
+            $stmt->bindValue(":idusuario", $idUsuario, PDO::PARAM_INT);
             $stmt->execute();
             $results = $stmt->fetch(PDO::FETCH_ASSOC);
             $existeRolUsuario = $results['rol_usuario'];
@@ -184,8 +182,8 @@
                 if($existeRolUsuario == "ADMINISTRADOR"){
                     return "No puede eliminar al Administrador";
                 }else{
-                    $stmtdel = $conexion->prepare("delete from usuario where id_usuario = :idUsuario");
-                    $stmtdel->bindValue(":idUsuario", $idUsuario, PDO::PARAM_INT);
+                    $stmtdel = $conexion->prepare("delete from usuario where id_usuario = :idusuario");
+                    $stmtdel->bindValue(":idusuario", $idUsuario, PDO::PARAM_INT);
                     if($stmtdel->execute()){
                         return "OK";
                     }else{
@@ -204,25 +202,25 @@
             $clave = $results['clave'];
             $nombreUsuario = $results['nombre_usuario'];
             $rolUsuario = $results['rol_usuario'];
-            $stmt2 = $conexion->prepare("SET FOREIGN_KEY_CHECKS=0");
+            $stmt2 = $conexion->prepare("set foreign_key_checks=0");
             $stmt2->execute();
             $stmt3 = $conexion->prepare("truncate table usuario");
             $stmt3->execute();
-            $stmt4 = $conexion->prepare("SET FOREIGN_KEY_CHECKS=1");
+            $stmt4 = $conexion->prepare("set foreign_key_checks=1");
             $stmt4->execute();
-            $stmt5 = $conexion->prepare("INSERT INTO `usuario`
-                            (`NOMBRE_PERSONA`,
-                            `NOMBRE_USUARIO`,
-                            `CLAVE`,
-                            `ROL_USUARIO`)
-                VALUES (:NombrePersona,
-                        :nombreUsuario,
+            $stmt5 = $conexion->prepare("insert into `usuario`
+                            (`nombre_persona`,
+                            `nombre_usuario`,
+                            `clave`,
+                            `rol_usuario`)
+                values (:nombrepersona,
+                        :nombreusuario,
                         :clave,
-                        :rolUsuario);");
-            $stmt5->bindValue(":NombrePersona", $nombrePersona, PDO::PARAM_STR);
-            $stmt5->bindValue(":nombreUsuario", $nombreUsuario, PDO::PARAM_STR);
+                        :rolusuario);");
+            $stmt5->bindValue(":nombrepersona", $nombrePersona, PDO::PARAM_STR);
+            $stmt5->bindValue(":nombreusuario", $nombreUsuario, PDO::PARAM_STR);
             $stmt5->bindValue(":clave", $clave, PDO::PARAM_STR);
-            $stmt5->bindValue(":rolUsuario", $rolUsuario, PDO::PARAM_STR);
+            $stmt5->bindValue(":rolusuario", $rolUsuario, PDO::PARAM_STR);
             if($stmt5->execute()){
                 return "OK";
             }else{

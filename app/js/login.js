@@ -3,11 +3,9 @@ var url = "app/controller/login.controller.php";
 
 var estadoPopup = false;
 
-$(document).ready(function () {
+$(document).ready(() => { })
 
-})
-
-function enter(valor) {
+enter = (valor) => {
     if (valor == 1) {
         input = document.getElementById("usuario");
         input.addEventListener('keypress', logKey);
@@ -15,7 +13,7 @@ function enter(valor) {
         input = document.getElementById("clave");
         input.addEventListener('keypress', logKey);
     }
-    function logKey(e) {
+    logKey = (e) => {
         var keycode = (e.keyCode ? e.keyCode : e.which);
         if (keycode == 13) {
             iniciarSesion();
@@ -23,7 +21,7 @@ function enter(valor) {
     }
 }
 
-function iniciarSesion() {
+iniciarSesion = () => {
     let usuario, clave;
     usuario = document.getElementById("usuario").value;
     clave = document.getElementById("clave").value;
@@ -42,18 +40,21 @@ function iniciarSesion() {
         url: url,
         type: 'POST',
         dataType: 'json'
-    }).done(function (response) {
-        if (response == "OK") {
+    }).done((response) => {
+        if (typeof (response) == 'object') {
             window.location.href = "app/view/index.php";
+            localStorage.setItem('nombre_persona', response.nombre_persona);
+            localStorage.setItem('rol_usuario', response.rol_usuario);
+            localStorage.setItem('id_usuario', response.id_usuario);
         } else {
             MostrarAlerta("", response, "error");
         }
-    }).fail(function (response) {
-        console.log(response);
+    }).fail((err) => {
+        console.log(err);
     });
 }
 
-function MostrarAlerta(titulo, descripcion, tipoAlerta) {
+MostrarAlerta = (titulo, descripcion, tipoAlerta) => {
     Swal.fire(
         titulo,
         descripcion,

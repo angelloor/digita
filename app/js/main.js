@@ -2,7 +2,7 @@
 var url = "../controller/main.controller.php";
 var idUsuario = "";
 
-$(document).ready(function () {
+$(document).ready(() => {
     traerConfiguracion();
     traerErrores();
     traerMejorTiempo();
@@ -14,91 +14,91 @@ $(document).ready(function () {
     }
 })
 
-function traerConfiguracion() {
+traerConfiguracion = () => {
     $.ajax({
         data: { "accion": "TRAERCONFIGURACION" },
         url: url,
         type: 'POST',
         dataType: 'json'
-    }).done(function (response) {
-        document.getElementById('totalActas').innerHTML = response.total_Actas
+    }).done((response) => {
+        document.getElementById('totalActas').innerHTML = response.total_actas
         document.getElementById('totalCandidatos').innerHTML = response.numero_candidatos
         document.getElementById('estadoGeneracion').innerHTML = response.estado_generacion
-    }).fail(function (response) {
-        console.log(response);
+    }).fail((err) => {
+        console.log(err);
     });
 }
 
-function traerUsuarios() {
+traerUsuarios = () => {
     $.ajax({
         data: { "accion": "TRAERUSUARIOS" },
         url: url,
         type: 'POST',
         dataType: 'json'
-    }).done(function (response) {
+    }).done((response) => {
         document.getElementById('totalUsuarios').innerHTML = response
-    }).fail(function (response) {
-        console.log(response);
+    }).fail((err) => {
+        console.log(err);
     });
 }
 
-function traerSesiones() {
+traerSesiones = () => {
     $.ajax({
         data: { "accion": "TRAERSESIONES" },
         url: url,
         type: 'POST',
         dataType: 'json'
-    }).done(function (response) {
+    }).done((response) => {
         document.getElementById('totalSesiones').innerHTML = response
-    }).fail(function (response) {
-        console.log(response);
+    }).fail((err) => {
+        console.log(err);
     });
 }
 
-function traerErrores() {
+traerErrores = () => {
     idUsuario = $("#idUsuario").text();
     $.ajax({
         data: { "accion": "TRAERERRORES", "idUsuario": idUsuario },
         url: url,
         type: 'POST',
         dataType: 'json'
-    }).done(function (response) {
+    }).done((response) => {
         document.getElementById('errores').innerHTML = response
-    }).fail(function (response) {
-        console.log(response);
+    }).fail((err) => {
+        console.log(err);
     });
 }
 
 
-function traerMejorTiempo() {
+traerMejorTiempo = () => {
     idUsuario = $("#idUsuario").text();
     $.ajax({
         data: { "accion": "TRAERMEJORTIEMPO", "idUsuario": idUsuario },
         url: url,
         type: 'POST',
         dataType: 'json'
-    }).done(function (response) {
-        if (response) {
-            document.getElementById('mejorTiempo').innerHTML = response
+    }).done((response) => {
+        if (response != false) {
+            document.getElementById('mejorTiempo').innerHTML = response.tiempo_total
         } else {
             document.getElementById('mejorTiempo').innerHTML = "00:00:00";
         }
-    }).fail(function (response) {
-        console.log(response);
+    }).fail((err) => {
+        console.log(err);
     });
 }
 
-function tpa() {
+tpa = () => {
     idUsuario = $("#idUsuario").text();
     $.ajax({
         data: { "accion": "TPA", "idUsuario": idUsuario },
         url: url,
         type: 'POST',
         dataType: 'json'
-    }).done(function (response) {
+    }).done((response) => {
         document.getElementById('tpa').innerHTML = response
-    }).fail(function (response) {
-        console.log(response);
+    }).fail((err) => {
+        console.log(err);
     });
 }
 

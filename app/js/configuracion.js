@@ -1,12 +1,12 @@
 
 var url = "../controller/configuracion.controller.php";
 
-$(document).ready(function () {
+$(document).ready(() => {
     listarConfiguracion();
     BloquearBotones(true);
 })
 
-function Restablecer() {
+Restablecer = () => {
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             cancelButton: 'btn btn-primary mr-2 ml-2',
@@ -28,15 +28,15 @@ function Restablecer() {
                 url: url,
                 type: 'POST',
                 dataType: 'json'
-            }).done(function (response) {
+            }).done((response) => {
                 if (response == "OK") {
                     MostrarAlerta("Éxito!", "Sistema Restablecido", "success");
                     listarConfiguracion();
                 } else {
                     MostrarAlerta("Error!", response, "error");
                 }
-            }).fail(function (response) {
-                console.log(response);
+            }).fail((err) => {
+                console.log(err);
             });
         } else if (
             result.dismiss === Swal.DismissReason.cancel
@@ -47,24 +47,24 @@ function Restablecer() {
 
 }
 
-function listarConfiguracion() {
+listarConfiguracion = () => {
     $.ajax({
         data: { "accion": "LISTARCONFIGURACION" },
         url: url,
         type: 'POST',
         dataType: 'json'
-    }).done(function (response) {
+    }).done((response) => {
         document.getElementById('totalActas').value = response.TOTAL_ACTAS;
         document.getElementById('numeroCandidatos').value = response.NUMERO_CANDIDATOS;
         document.getElementById('totalPosiblesActas').value = response.TOTAL_POSIBLES_ACTAS;
         document.getElementById('estadoGeneracion').value = response.ESTADO_GENERACION;
 
-    }).fail(function (response) {
-        console.log(response);
+    }).fail((err) => {
+        console.log(err);
     });
 }
 
-function Guardar() {
+Guardar = () => {
     BloquearBotones(true);
     totalActas = document.getElementById('totalActas').value;
     numeroCandidatos = document.getElementById('numeroCandidatos').value;
@@ -74,18 +74,18 @@ function Guardar() {
         url: url,
         type: 'POST',
         dataType: 'json'
-    }).done(function (response) {
+    }).done((response) => {
         if (response == "OK") {
             MostrarAlerta("Éxito!", "Datos guardados con éxito", "success");
         } else {
             MostrarAlerta("Error!", response, "error");
         }
-    }).fail(function (response) {
-        console.log(response);
+    }).fail((err) => {
+        console.log(err);
     });
 }
 
-function Modificar() {
+Modificar = () => {
     BloquearBotones(false);
     if (document.getElementById('estadoGeneracion').value == 1) {
         document.getElementById('numeroCandidatos').disabled = true;
@@ -93,11 +93,11 @@ function Modificar() {
     }
 }
 
-function Cancelar() {
+Cancelar = () => {
     BloquearBotones(true);
 }
 
-function BloquearBotones(guardar) {
+BloquearBotones = (guardar) => {
     if (guardar) {
         document.getElementById('guardar').disabled = true;
         document.getElementById('modificar').disabled = false;
@@ -118,7 +118,7 @@ function BloquearBotones(guardar) {
 }
 
 
-function MostrarAlerta(titulo, descripcion, tipoAlerta) {
+MostrarAlerta = (titulo, descripcion, tipoAlerta) => {
     Swal.fire(
         titulo,
         descripcion,

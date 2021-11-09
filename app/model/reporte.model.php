@@ -7,18 +7,48 @@
             $fi = $fia[0]." ".$fia[1];
             $ffa = explode("T",$fechaFinal);
             $ff = $ffa[0]." ".$ffa[1];
-            $stmt = $conexion->prepare("SELECT s.id_sesion, s.hora_inicio, s.hora_final, s.tiempo_total, u.nombre_usuario, s.fecha_sesion FROM sesion s INNER JOIN usuario u ON s.usuario_id = u.id_usuario WHERE s.fecha_sesion BETWEEN :fechaInicio AND :fechaFinal;");
-            $stmt->bindValue(":fechaInicio",$fi, PDO::PARAM_STR);
-            $stmt->bindValue(":fechaFinal",$ff, PDO::PARAM_STR);
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_OBJ);
-        }
-        public function consultar(){
-            $conexion =  new Conexion();
-            $stmt = $conexion->prepare("SELECT s.id_sesion, s.hora_inicio, s.hora_final, s.tiempo_total, u.nombre_usuario, s.fecha_sesion FROM sesion s INNER JOIN usuario u ON s.usuario_id = u.id_usuario;");
+
+            $stmt = $conexion->prepare("select s.id_sesion, s.hora_inicio, s.hora_final, s.tiempo_total, u.nombre_usuario, s.fecha_sesion from sesion s inner join usuario u on s.usuario_id = u.id_usuario where s.fecha_sesion between :fechainicio and :fechafinal;");
+            $stmt->bindValue(":fechainicio",$fi, PDO::PARAM_STR);
+            $stmt->bindValue(":fechafinal",$ff, PDO::PARAM_STR);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_OBJ);
         }
 
+        public function consultaSesion($fechaInicio,$fechaFinal){
+            $conexion =  new Conexion();
+
+            $stmt = $conexion->prepare("select count(*) from sesion s inner join usuario u on s.usuario_id = u.id_usuario where s.fecha_sesion between :fechainicio and :fechafinal;");
+            $stmt->bindValue(":fechainicio",$fechaInicio, PDO::PARAM_STR);
+            $stmt->bindValue(":fechafinal",$fechaFinal, PDO::PARAM_STR);
+            $stmt->execute();
+            $results = $stmt->fetch(PDO::FETCH_ASSOC);
+            $totalSesiones = $results['count(*)'];
+
+            return $totalSesiones;
+        }
+
+        public function consultarDatos($fechaInicio,$fechaFinal){
+            $conexion =  new Conexion();
+
+            $stmt = $conexion->prepare("select s.id_sesion, s.hora_inicio, s.hora_final, s.tiempo_total, u.nombre_usuario, s.fecha_sesion, s.total_actas from sesion s inner join usuario u on s.usuario_id = u.id_usuario where s.fecha_sesion between :fechainicio and :fechafinal order by s.id_sesion   ;");
+            $stmt->bindValue(":fechainicio",$fechaInicio, PDO::PARAM_STR);
+            $stmt->bindValue(":fechafinal",$fechaFinal, PDO::PARAM_STR);
+            $stmt->execute();
+            $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $datos;
+        }
+
+        public function errores($idSesion){
+            $conexion =  new Conexion();
+
+            $stmt = $conexion->prepare("select acta_id, cantidad from usuario_error where sesion_id = :idSesion");
+            $stmt->bindValue(":idSesion",$idSesion, PDO::PARAM_INT);
+            $stmt->execute();
+            $errores = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $errores;
+        }
     }
 ?>

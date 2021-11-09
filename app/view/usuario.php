@@ -1,12 +1,8 @@
-<?php
-    require '../model/login.model.php';
-    if($_SESSION['nombre_persona'] == ""){
-    	header('Location: ../');
-    }
-    if($_SESSION['rol_usuario'] == "DIGITADOR"){
-    	header('Location: ./');
-    }
-?>
+<script type="text/javascript">
+    if (!(localStorage.getItem('nombre_persona'))) {
+      window.location.href = "../../index.php";
+    } 
+</script>
 <!doctype html>
 <html lang="es">
 <head>

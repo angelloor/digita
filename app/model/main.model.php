@@ -4,7 +4,7 @@
     class Main{
         public function traerConfiguracion(){
             $conexion = new Conexion();
-            $stmt = $conexion->prepare("select total_Actas, numero_candidatos, estado_generacion from configuracion where id_configuracion = 1;");
+            $stmt = $conexion->prepare("select total_actas, numero_candidatos, estado_generacion from configuracion where id_configuracion = 1;");
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_OBJ);
         }
@@ -30,8 +30,8 @@
         public function traerErrores($idUsuario){
             $totalErrores = 0;
             $conexion = new Conexion();
-            $stmt = $conexion->prepare("select cantidad from usuario_error where usuario_id = :idUsuario");
-            $stmt->bindValue(":idUsuario",$idUsuario, PDO::PARAM_INT);
+            $stmt = $conexion->prepare("select cantidad from usuario_error where usuario_id = :idusuario");
+            $stmt->bindValue(":idusuario",$idUsuario, PDO::PARAM_INT);
             $stmt->execute();
             $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             foreach ($datos as $row) {
@@ -42,19 +42,17 @@
 
         public function traerMejorTiempo($idUsuario){
             $conexion = new Conexion();
-            $stmt = $conexion->prepare("select tiempo_total from sesion where usuario_id = :idUsuario order by tiempo_total asc limit 1;");
-            $stmt->bindValue(":idUsuario",$idUsuario, PDO::PARAM_INT);
+            $stmt = $conexion->prepare("select tiempo_total from sesion where usuario_id = :idusuario order by tiempo_total asc limit 1;");
+            $stmt->bindValue(":idusuario",$idUsuario, PDO::PARAM_INT);
             $stmt->execute();
-            $datos = $stmt->fetch(PDO::FETCH_ASSOC);
-            $mejorTiempo = $datos['tiempo_total'];
-            return $mejorTiempo;
+            return $stmt->fetch(PDO::FETCH_OBJ);
         }
 
         public function tpa($idUsuario){
             $tpaf = "23:59:59";
             $conexion = new Conexion();
-            $stmt = $conexion->prepare("select tiempo_total, total_actas from sesion where usuario_id = :idUsuario");
-            $stmt->bindValue(":idUsuario",$idUsuario, PDO::PARAM_INT);
+            $stmt = $conexion->prepare("select tiempo_total, total_actas from sesion where usuario_id = :idusuario");
+            $stmt->bindValue(":idusuario",$idUsuario, PDO::PARAM_INT);
             $stmt->execute();
             $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         

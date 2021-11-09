@@ -1,18 +1,23 @@
 var url = "../controller/reporte.controller.php";
 
-$(document).ready(function () {
+var totalSesiones
+var datos
+var datosFinal = []
+var timeToLoading = 1000
+
+$(document).ready(() => {
     // consultarTodo();
 })
 
-function consultarTodo() {
+consultarTodo = () => {
     $.ajax({
         url: url,
         data: { "accion": "CONSULTAR" },
         type: 'POST',
         dataType: 'json'
-    }).done(function (response) {
+    }).done((response) => {
         var html = "";
-        $.each(response, function (index, data) {
+        $.each(response, (index, data) => {
             html += "<tr>";
             html += "<td>" + data.id_sesion + "</td>";
             html += "<td>" + data.nombre_usuario + "</td>";
@@ -23,12 +28,12 @@ function consultarTodo() {
             html += "</tr>";
         });
         document.getElementById("datos").innerHTML = html;
-    }).fail(function (response) {
-        console.log(response);
+    }).fail((err) => {
+        console.log(err);
     });
 }
 
-function visualizar() {
+visualizar = () => {
     if (comprobarFechas() == 1) {
         MostrarAlerta("", "Ingrese el rango de las fechas", "info");
     } else {
@@ -45,9 +50,9 @@ function visualizar() {
                     data: { "accion": "VISUALIZAR", "fechaInicio": fechaInicio, "fechaFinal": fechaFinal },
                     type: 'POST',
                     dataType: 'json'
-                }).done(function (response) {
+                }).done((response) => {
                     var html = "";
-                    $.each(response, function (index, data) {
+                    $.each(response, (index, data) => {
                         html += "<tr>";
                         html += "<td>" + data.id_sesion + "</td>";
                         html += "<td>" + data.nombre_usuario + "</td>";
@@ -58,15 +63,15 @@ function visualizar() {
                         html += "</tr>";
                     });
                     document.getElementById("datos").innerHTML = html;
-                }).fail(function (response) {
-                    console.log(response);
+                }).fail((err) => {
+                    console.log(err);
                 });
             }
         }
     }
 }
 
-function pdf() {
+pdf = async () => {
     if (comprobarFechas() == 1) {
         MostrarAlerta("", "Ingrese el rango de las fechas", "info");
     } else {
@@ -78,13 +83,58 @@ function pdf() {
             } else {
                 fechaInicio = document.getElementById('fechaInicio').value;
                 fechaFinal = document.getElementById('fechaFinal').value;
-                window.open('../model/reporte.php?fechaInicio=' + fechaInicio + '&fechaFinal=' + fechaFinal + '&accion=pdf', '_blank');
+                $.ajax({
+                    url: url,
+                    data: { "accion": "CONSULTA_SESION", "fechaInicio": transformData(fechaInicio), "fechaFinal": transformData(fechaFinal) },
+                    type: 'POST',
+                    dataType: 'json'
+                }).done((response) => {
+                    if (response > 0) {
+                        // Consultar los datos
+                        $.ajax({
+                            url: url,
+                            data: { "accion": "CONSULTA_DATOS", "fechaInicio": transformData(fechaInicio), "fechaFinal": transformData(fechaFinal) },
+                            type: 'POST',
+                            dataType: 'json'
+                        }).done(async (response) => {
+                            datos = response
+                            datos.map(async (item) => {
+                                let idSesion = item.id_sesion
+                                $.ajax({
+                                    url: url,
+                                    data: { "accion": "ERRORES", "idSesion": idSesion },
+                                    type: 'POST',
+                                    dataType: 'json'
+                                }).done((response) => {
+                                    let element = {
+                                        ...item,
+                                        errores: response
+                                    }
+                                    datosFinal = datosFinal.concat(element)
+                                }).fail((err) => {
+                                    reject(err)
+                                });
+                            })
+                            timeAlert()
+                            setTimeout(() => {
+                                window.open('../model/reporte.php?fechaInicio=' + transformData(fechaInicio) + '&fechaFinal=' + transformData(fechaFinal) + '&data=' + JSON.stringify({ datosFinal }) + '&accion=pdf', '_blank');
+                            }, timeToLoading)
+                        }).fail((err) => {
+                            reject(err)
+                        });
+                    } else {
+                        MostrarAlerta("", "No se encontraron sesiones con las fechas seleccionadas", "info");
+                    }
+                }).fail((err) => {
+                    reject(err)
+                });
             }
         }
     }
+    datosFinal = []
 }
 
-function excel() {
+excel = () => {
     if (comprobarFechas() == 1) {
         MostrarAlerta("", "Ingrese el rango de las fechas", "info");
     } else {
@@ -96,13 +146,41 @@ function excel() {
             } else {
                 fechaInicio = document.getElementById('fechaInicio').value;
                 fechaFinal = document.getElementById('fechaFinal').value;
-                window.open('../model/reporte.php?fechaInicio=' + fechaInicio + '&fechaFinal=' + fechaFinal + '&accion=excel', '_blank');
+                $.ajax({
+                    url: url,
+                    data: { "accion": "CONSULTA_SESION", "fechaInicio": transformData(fechaInicio), "fechaFinal": transformData(fechaFinal) },
+                    type: 'POST',
+                    dataType: 'json'
+                }).done((response) => {
+                    if (response > 0) {
+                        // Consultar los datos
+                        $.ajax({
+                            url: url,
+                            data: { "accion": "CONSULTA_DATOS", "fechaInicio": transformData(fechaInicio), "fechaFinal": transformData(fechaFinal) },
+                            type: 'POST',
+                            dataType: 'json'
+                        }).done((response) => {
+                            datos = response
+                            timeAlert()
+                            setTimeout(() => {
+                                window.open('../model/reporte.php?data=' + JSON.stringify(datos) + '&accion=excel', '_blank');
+                            }, timeToLoading)
+                        }).fail((err) => {
+                            console.log(err);
+                        });
+                    } else {
+                        MostrarAlerta("", "No se encontraron sesiones con las fechas seleccionadas", "info");
+                    }
+                }).fail((err) => {
+                    console.log(err);
+                });
             }
         }
     }
+    datosFinal = []
 }
 
-function comprobarFechas() {
+comprobarFechas = () => {
     fechaInicio = document.getElementById('fechaInicio').value;
     fechaFinal = document.getElementById('fechaFinal').value;
     if (fechaInicio == "" && fechaFinal == "") {
@@ -119,10 +197,41 @@ function comprobarFechas() {
     return 0;
 }
 
-function MostrarAlerta(titulo, descripcion, tipoAlerta) {
+MostrarAlerta = (titulo, descripcion, tipoAlerta) => {
     Swal.fire(
         titulo,
         descripcion,
         tipoAlerta
     );
+}
+
+transformData = (fecha) => {
+    return `${fecha.substring(0, 4)}-${fecha.substring(5, 7)}-${fecha.substring(8, 10)} ${fecha.substring(11, 16)}`
+}
+
+timeAlert = () => {
+    let timerInterval
+    Swal.fire({
+        title: 'Generando...',
+        timer: timeToLoading,
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading()
+            timerInterval = setInterval(() => {
+                const content = Swal.getContent()
+                if (content) {
+                    const b = content.querySelector('b')
+                    if (b) {
+                        b.textContent = Swal.getTimerLeft()
+                    }
+                }
+            }, 100)
+        },
+        willClose: () => {
+            clearInterval(timerInterval)
+        }
+    }).then((result) => {
+        if (result.dismiss === Swal.DismissReason.timer) {
+        }
+    })
 }
