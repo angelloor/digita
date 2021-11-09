@@ -13,7 +13,7 @@ enter = (valor) => {
         input = document.getElementById("clave");
         input.addEventListener('keypress', logKey);
     }
-    logKey = (e) => {
+    function logKey(e) {
         var keycode = (e.keyCode ? e.keyCode : e.which);
         if (keycode == 13) {
             iniciarSesion();
@@ -61,5 +61,3 @@ MostrarAlerta = (titulo, descripcion, tipoAlerta) => {
         tipoAlerta
     );
 }
-
-
