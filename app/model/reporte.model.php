@@ -7,8 +7,8 @@
             $fi = $fia[0]." ".$fia[1];
             $ffa = explode("T",$fechaFinal);
             $ff = $ffa[0]." ".$ffa[1];
-
-            $stmt = $conexion->prepare("select s.id_sesion, s.hora_inicio, s.hora_final, s.tiempo_total, u.nombre_usuario, s.fecha_sesion from sesion s inner join usuario u on s.usuario_id = u.id_usuario where s.fecha_sesion between :fechainicio and :fechafinal;");
+            
+            $stmt = $conexion->prepare("select s.id_sesion, s.hora_inicio, s.hora_final, s.tiempo_total, u.nombre_usuario, s.fecha_sesion, s.total_actas, SUM(ue.cantidad) as errores, SEC_TO_TIME(FLOOR(TIME_TO_SEC(s.TIEMPO_TOTAL) / s.TOTAL_ACTAS)) as tpa from sesion s inner join usuario u on s.usuario_id = u.id_usuario inner join usuario_error ue on s.id_sesion = ue.sesion_id where s.fecha_sesion between :fechainicio and :fechafinal GROUP BY s.id_sesion;");
             $stmt->bindValue(":fechainicio",$fi, PDO::PARAM_STR);
             $stmt->bindValue(":fechafinal",$ff, PDO::PARAM_STR);
             $stmt->execute();

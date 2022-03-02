@@ -78,6 +78,7 @@
                         <label for="rolUsuario">Rol de Usuario</label>
                         <select name="rolUsuario" class="form-control br" id="rolUsuario">
                             <option value="DIGITADOR">DIGITADOR</option>
+                            <option value="REPORTES">REPORTES</option>
                             <option value="ADMINISTRADOR">ADMINISTRADOR</option>
                        </select>
                     </div>

@@ -37,7 +37,7 @@
             $stmt->bindValue(":fechasesion",$fechaInicio, PDO::PARAM_STR);
             $stmt->bindValue(":totalactas",$totalActas, PDO::PARAM_INT);
             $stmt->execute();
-
+            
             return $actual;
           
         }

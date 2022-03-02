@@ -9,7 +9,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto" id="navbarPrincipal2">
           <script type="text/javascript">
-            let htmlHeader = `<li class="nav-item dropdown">
+              let htmlHeaderAdministrador = `<li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sistema</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown01">
                 <a class="dropdown-item" href="configuracion.php">Configuracion</a>
@@ -17,17 +17,33 @@
                 <a class="dropdown-item" href="usuario.php">Usuarios</a>
                 <a class="dropdown-item" href="reporte.php">Reportes</a>
                 </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Proceso</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown01">
+                  <a class="dropdown-item" href="digitacion.php">Digitacion</a>
+                </div>
+              </li>`
+              let htmlHeaderReportes = `<li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sistema</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown01">
+                <a class="dropdown-item" href="reporte.php">Reportes</a>
+                </div>
+              </li>`
+              let htmlHeaderDigitador = `<li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Proceso</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown01">
+                  <a class="dropdown-item" href="digitacion.php">Digitacion</a>
+                </div>
               </li>`
             if (localStorage.getItem('rol_usuario') == "ADMINISTRADOR") {
-                document.getElementById('navbarPrincipal2').innerHTML = htmlHeader;
-            }   
+                document.getElementById('navbarPrincipal2').innerHTML = htmlHeaderAdministrador;
+            } else if (localStorage.getItem('rol_usuario') == "REPORTES") {
+              document.getElementById('navbarPrincipal2').innerHTML = htmlHeaderReportes;
+            } else if (localStorage.getItem('rol_usuario') == "DIGITADOR") {
+              document.getElementById('navbarPrincipal2').innerHTML = htmlHeaderDigitador;
+            }
           </script>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Proceso</a>
-          <div class="dropdown-menu" aria-labelledby="dropdown01">
-            <a class="dropdown-item" href="digitacion.php">Digitacion</a>
-          </div>
-        </li>
           </ul>
           <div class="form-inline my-2 my-lg-0">
           <div class="container-usuario">

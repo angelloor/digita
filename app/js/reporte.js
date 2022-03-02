@@ -51,16 +51,22 @@ visualizar = () => {
                     type: 'POST',
                     dataType: 'json'
                 }).done((response) => {
+                    console.log(response)
                     var html = "";
                     $.each(response, (index, data) => {
-                        html += "<tr>";
-                        html += "<td>" + data.id_sesion + "</td>";
-                        html += "<td>" + data.nombre_usuario + "</td>";
-                        html += "<td>" + data.hora_inicio + "</td>";
-                        html += "<td>" + data.hora_final + "</td>";
-                        html += "<td>" + data.tiempo_total + "</td>";
-                        html += "<td>" + data.fecha_sesion + "</td>";
-                        html += "</tr>";
+                        if (data.id_sesion != null) {
+                            html += "<tr>";
+                            html += "<td>" + data.id_sesion + "</td>";
+                            html += "<td>" + data.fecha_sesion + "</td>";
+                            html += "<td>" + data.nombre_usuario + "</td>";
+                            html += "<td>" + data.total_actas + "</td>";
+                            html += "<td>" + data.hora_inicio + "</td>";
+                            html += "<td>" + data.hora_final + "</td>";
+                            html += "<td>" + data.tiempo_total + "</td>";
+                            html += "<td>" + data.tpa + "</td>";
+                            html += "<td>" + data.errores + "</td>";
+                            html += "</tr>";
+                        }
                     });
                     document.getElementById("datos").innerHTML = html;
                 }).fail((err) => {

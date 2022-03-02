@@ -72,11 +72,14 @@
                     <thead>
                         <tr>
                             <th>Id Sesion</th>
+                            <th>Fecha</th>
                             <th>Usuario</th>
+                            <th>Total Actas</th>
                             <th>Hora Inicio</th>
                             <th>Hora Final</th>
-                            <th>Tiempo</th>
-                            <th>Fecha</th>
+                            <th>Tiempo Total</th>
+                            <th>TPA</th>
+                            <th>Errores</th>
                         </tr>
                     </thead>
                     <tbody id="datos">

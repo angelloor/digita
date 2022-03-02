@@ -22,7 +22,7 @@ $(document).ready(() => {
 manejoInput = (inputF, inputS) => {
     $('input')
         .keypress((event) => {
-            if (event.which < 48 || event.which > 57 || this.value.length == 3 || event.which == 9) {
+            if (event.which < 48 || event.which > 57 || event.which == 9) {
                 return false;
             }
         });
@@ -154,7 +154,7 @@ Nuevo = () => {
                         html += "<img src='../assets/cortes/" + data.img_voto_id + ".jpg' alt='" + data.img_voto_id + "' id='img" + index + "'>";
                         html += "</div>";
                         html += "<div class='valor'>";
-                        html += "<input type='text' onkeypress='manejoInput(" + index + "," + (parseInt(index) + 1) + ")' id='input" + index + "'>";
+                        html += "<input type='text' maxlength='3' onkeypress='manejoInput(" + index + "," + (parseInt(index) + 1) + ")' id='input" + index + "'>";
                         html += "</div>  ";
                         html += "</div>";
                     });
